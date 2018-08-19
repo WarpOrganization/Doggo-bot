@@ -8,8 +8,11 @@ import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 
 /**
  * @author KocproZ
@@ -18,13 +21,14 @@ import java.util.Queue;
 public class Main {
 
     static DiscordApi api;
-    static Queue<Message> toRemove = new LinkedList<>();
+    private static Queue<Message> toRemove = new LinkedList<>();
     static Role role_koder;
     static Server server;
+    private static String token;
 
-    public static void main(String... args) {
-        String token = "NDgwNDY1NDM3MjY0NTc2NTMz.DloNpA.lx4u1Ch0TRv7bJGkZ8vRF5x-RuY";
-
+    public static void main(String... args) throws Exception {
+        loadConfig();
+        System.out.println("Loaded config");
         api = new DiscordApiBuilder().setToken(token).login().join();
 
         Borker.init();
@@ -54,6 +58,9 @@ public class Main {
             Jenkins.checkForJenkinsActions(event);
 
         });
+        System.out.println("Created listeners");
+
+//        System.out.println("Invite: " + api.createBotInvite());
 
         new Thread(() -> {
             while (true) {
@@ -68,9 +75,13 @@ public class Main {
                 }
             }
         }).run();
+    }
 
-//        System.out.println("You can invite the bot by using the following url: " + api.createBotInvite());
-
+    private static void loadConfig() throws FileNotFoundException {
+        Scanner s = new Scanner(new File("./config"));
+        token = s.nextLine().split(" ")[1];
+        Jenkins.setUsername(s.nextLine().split(" ")[1]);
+        Jenkins.setToken(s.nextLine().split(" ")[1]);
     }
 
 }
