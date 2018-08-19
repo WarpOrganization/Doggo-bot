@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    compile 'org.javacord:javacord:3.0.0'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
+
+    // Use JUnit test framework
+    testCompile 'junit:junit:4.12'
+}
+
+repositories {
+    jcenter()
+}
+
+jar {
+    from {
+        project.configurations.compile
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes 'Main-Class': 'ovh.kocproz.bot.Main'
+    }
+}
