@@ -23,6 +23,7 @@ public class Main {
     static DiscordApi api;
     private static Queue<Message> toRemove = new LinkedList<>();
     static Role role_koder;
+    static Role role_admin;
     static Server server;
     private static String token;
 
@@ -33,6 +34,7 @@ public class Main {
 
         Borker.init();
         role_koder = api.getRoleById("446444349991944192").orElseThrow(RuntimeException::new);
+        role_admin = api.getRoleById("446444051131138069").orElseThrow(RuntimeException::new);
         server = api.getServerById("446443682124529685").orElseThrow(RuntimeException::new);
 
         api.addServerMemberJoinListener(Welcomer::welcome);
@@ -54,6 +56,7 @@ public class Main {
                 return;
             }
 
+            Biter.tryToBite(event);
             Borker.borkIfNecessary(event);
             Jenkins.checkForJenkinsActions(event);
 
